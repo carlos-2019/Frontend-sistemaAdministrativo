@@ -1,0 +1,291 @@
+<div class="card">
+    <br>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-3">
+          <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Nuevo Producto</button>
+        </div>
+        <div class="col-9">
+          <div class="input-group mb-3">
+            <input type="text" 
+                   class="form-control"
+                   placeholder="Buscar producto por nombre"
+                   #txtTermino 
+                   (keyup)="buscar(txtTermino.value)"
+                   >
+            <div class="input-group-append">
+              <button class="btn btn-outline-danger" type="button" (click)="buscar(txtTermino.value)"><i class="fas fa-search"></i></button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <br>
+        <!-- Dark table -->
+        <div class="row">
+          <div class="col">
+            <div class="card bg-default shadow">
+              <div class="card-header bg-transparent border-0">
+                <h3 class="text-white mb-0">Tabla Producto</h3>
+              </div>
+              <div class="table-responsive">
+                <table class="table align-items-center table-dark table-flush">
+                  <thead class="thead-dark">
+                    <tr>
+                      <th scope="col" class="sort" data-sort="name">Producto</th>
+                      <th scope="col" class="sort" data-sort="budget">Categoria</th>
+                      <th scope="col" class="sort" data-sort="name">N° Stand</th>
+                      <th scope="col" class="sort" data-sort="status">Stock</th>
+                      <th scope="col" class="sort" data-sort="status">Estado</th>
+                      <th scope="col" class="sort" data-sort="status">Imagen</th>
+                      <th scope="col" >Opciones</th>
+                    </tr>
+                  </thead>
+                  <tbody>      
+                    <tr *ngFor="let producto of productos" class="list">
+                      <th scope="row">
+                        <div class="media align-items-center">
+                          <div class="media-body">
+                            <span class="name mb-0 text-sm">{{producto.nomb_prod}}</span>
+                          </div>
+                        </div>
+                      </th>
+                      <th scope="row">
+                        <div class="media align-items-center">
+                          <div class="media-body">
+                            <span class="name mb-0 text-sm">{{producto.categorias.nomb_categ}}</span>
+                          </div>
+                        </div>
+                      </th>
+                      <th scope="row">
+                          <div class="media align-items-center">
+                              <div class="media-body">
+                                  <span class="name mb-0 text-sm">{{producto.stand.nume_stand}}</span>
+                                </div>
+                            </div>
+                        </th>
+                        <th scope="row">
+                            <div class="media align-items-center">
+                                <div class="media-body">
+                                    <span class="name mb-0 text-sm">{{producto.stock_prod}}</span>
+                                  </div>
+                              </div>
+                          </th>
+                        <td *ngIf="producto.esta_prod == 1; else inactivo">
+                          <span class="badge badge-dot mr-4">
+                            <i class="bg-success"></i>
+                            <span class="status">Activo</span>
+                          </span>
+                        </td>
+                        <ng-template #inactivo>
+                          <td>
+                            <span class="badge badge-dot mr-4">
+                              <i class="bg-danger"></i>
+                              <span class="status">Inactivo</span>
+                            </span>
+                          </td>
+                        </ng-template>
+                        <th scope="row">
+                            <div class="media align-items-center">
+                                <div class="media-body">
+                                    <span class="name mb-0 text-sm"><img src="../../../assets/img/notimage.png" alt=""></span>
+                                  </div>
+                              </div>
+                          </th>
+                      <th scope="row">
+                        <div class="media align-items-center">
+                          <div class="media-body">
+                            <a (click)="getProductoById(producto.id)" data-toggle="modal" data-target="#myModal1" class="btn btn-success"><i class="fas fa-user-edit"></i></a>
+                            <a (click)="deleteProducto(producto.id)" class="btn btn-danger"><i class="fas fa-minus-circle"></i></a>
+                            <a (click)="detalleProduco(producto.id)" class="btn btn-primary"><i class="far fa-eye"></i></a>
+                          </div>
+                        </div>
+                      </th>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+</div>
+
+ <!-- CREATE -->
+ <div class="modal fade" id="myModal" role="dialog">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form #productoForm="ngForm" (ngSubmit)="onRegisterProducto(productoForm)">
+          <div class="form-row">
+            <div class="form-group col-md-4">
+              <label for="inputEmail4">Nombre</label>
+              <input type="text" class="form-control" name="nomb_prod" #name="ngModel" [(ngModel)]="producto.nomb_prod" required>
+            </div>
+            <div class="form-group col-md-4">
+              <label for="inputPassword4">Stand</label>
+              <input type="text" class="form-control" name="id_stand" #name="ngModel" [(ngModel)]="producto.id_stand" required>
+            </div>
+            <div class="form-group col-md-4">
+              <label for="inputPassword4">Categoria</label>
+              <select class="custom-select" name="id_categ" #name="ngModel" [(ngModel)]="producto.id_categ">
+                <option value="0">Seleccione</option>
+                <option value="1">Regalos</option>
+                <option value="2">Mascotas</option>
+                <option value="3">Bazar</option>
+                <option value="4">Belleza</option>
+                <option value="5">Niños</option>
+                <option value="6">Moda Hombre</option>
+                <option value="7">Moda Mujer</option>
+                <option value="8">Moda Infantil</option>
+                <option value="9">Calzado</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-8">
+              <label for="inputAddress2">Descripcion</label>
+              <textarea class="form-control" cols="30" rows="2" name="desc_prod" #name="ngModel" [(ngModel)]="producto.desc_prod"></textarea>
+            </div>
+            <div class="form-group col-md-4">
+              <label for="inputEmail4">Stock</label>
+              <input type="number" class="form-control" name="stock_prod" #name="ngModel" [(ngModel)]="producto.stock_prod" required min="0">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-4">
+              <label for="inputPassword4">Precio Unitario</label>
+              <input type="text" class="form-control" name="puni_prod" #name="ngModel" [(ngModel)]="producto.puni_prod" required>
+            </div>
+            <div class="form-group col-md-4">
+              <label for="inputPassword4">Talla</label>
+              <select class="custom-select" name="talla" #name="ngModel" [(ngModel)]="producto.talla" required>
+                <option value="0">Seleccione</option>
+                <option value="S">S</option>
+                <option value="M">M</option>
+                <option value="L">L</option>
+                <option value="XL">XL</option>
+                <option value="XXL">XXL</option>
+              </select>
+            </div>
+            <div class="form-group col-md-4">
+              <label for="inputEmail4">Material</label>
+              <input type="text" class="form-control" name="material" #name="ngModel" [(ngModel)]="producto.material">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group col-md-3">
+              <label for="inputPassword4">Color</label>
+              <input type="text" class="form-control" name="color" #name="ngModel" [(ngModel)]="producto.color">
+            </div>
+            <div class="form-group col-md-3">
+              <label for="inputPassword4">Descuento</label>
+              <input type="number" class="form-control" name="descu_prod" #name="ngModel" [(ngModel)]="producto.descu_prod" max="100" min="0">
+            </div>
+            <div class="custom-file col-md-6">
+              <label for="inputPassword4">Imagen</label>
+              <input type="file" class="form-control">
+            </div>
+          </div>
+              <button type="submit" class="btn btn-primary my-4">Guardar</button>
+              <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--UPDATE-->
+
+<!-- Modal -->
+<div class="modal fade" id="myModal1" role="dialog">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <form #productoForm="ngForm" (ngSubmit)="onUpdateProducto(productoForm)">
+      <div class="modal-body">
+          <div class="form-row">
+            <div class="form-group col-md-4">
+              <label for="inputEmail4">Nombre</label>
+              <input type="text" class="form-control" name="nomb_prod" #name="ngModel" [(ngModel)]="producto.nomb_prod" required>
+            </div>
+            <div class="form-group col-md-4">
+              <label for="inputPassword4">Stand</label>
+              <input type="text" class="form-control" name="id_stand" #name="ngModel" [(ngModel)]="producto.id_stand" required>
+            </div>
+            <div class="form-group col-md-4">
+              <label for="inputPassword4">Categoria</label>
+              <select class="custom-select" name="id_categ" #name="ngModel" [(ngModel)]="producto.id_categ">
+                <option value="0">Seleccione</option>
+                <option value="1">Regalos</option>
+                <option value="2">Mascotas</option>
+                <option value="3">Bazar</option>
+                <option value="4">Belleza</option>
+                <option value="5">Niños</option>
+                <option value="6">Moda Hombre</option>
+                <option value="7">Moda Mujer</option>
+                <option value="8">Moda Infantil</option>
+                <option value="9">Calzado</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-8">
+              <label for="inputAddress2">Descripcion</label>
+              <textarea class="form-control" cols="30" rows="2" name="desc_prod" #name="ngModel" [(ngModel)]="producto.desc_prod"></textarea>
+            </div>
+            <div class="form-group col-md-4">
+              <label for="inputEmail4">Stock</label>
+              <input type="number" class="form-control" name="stock_prod" #name="ngModel" [(ngModel)]="producto.stock_prod" required min="0">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group col-md-4">
+              <label for="inputPassword4">Precio Unitario</label>
+              <input type="text" class="form-control" name="puni_prod" #name="ngModel" [(ngModel)]="producto.puni_prod" required>
+            </div>
+            <div class="form-group col-md-4">
+              <label for="inputPassword4">Talla</label>
+              <select class="custom-select" name="talla" #name="ngModel" [(ngModel)]="producto.talla" required>
+                <option value="0">Seleccione</option>
+                <option value="S">S</option>
+                <option value="M">M</option>
+                <option value="L">L</option>
+                <option value="XL">XL</option>
+                <option value="XXL">XXL</option>
+              </select>
+            </div>
+            <div class="form-group col-md-4">
+              <label for="inputEmail4">Material</label>
+              <input type="text" class="form-control" name="material" #name="ngModel" [(ngModel)]="producto.material">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group col-md-3">
+              <label for="inputPassword4">Color</label>
+              <input type="text" class="form-control" name="color" #name="ngModel" [(ngModel)]="producto.color">
+            </div>
+            <div class="form-group col-md-3">
+              <label for="inputPassword4">Descuento</label>
+              <input type="number" class="form-control" name="descu_prod" #name="ngModel" [(ngModel)]="producto.descu_prod" max="100" min="0">
+            </div>
+            <div class="custom-file col-md-6">
+              <label for="inputPassword4">Imagen</label>
+              <input type="file" class="form-control">
+            </div>
+          </div>
+          <div class="modal-footer">
+              <button type="submit" class="btn btn-primary my-4" data-dismiss="">Guardar</button>
+              <button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
